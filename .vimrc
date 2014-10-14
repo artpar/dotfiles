@@ -1,3 +1,15 @@
+" Some Linux distributions set filetype in /etc/vimrc.
+" Clear filetype flags before changing runtimepath to force Vim to reload them.
+if exists("g:did_load_filetypes")
+    filetype off
+    filetype plugin indent off
+endif
+set runtimepath+=$GOROOT/misc/vim " replace $GOROOT with the output of: go env GOROOT
+filetype plugin indent on
+syntax on
+
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
+
 " Douglas Black
 " Colors {{{
 syntax enable           " enable syntax processing
@@ -50,7 +62,7 @@ onoremap an :<c-u>call <SID>NextTextObject('a', 'f')<cr>
 xnoremap an :<c-u>call <SID>NextTextObject('a', 'f')<cr>
 onoremap in :<c-u>call <SID>NextTextObject('i', 'f')<cr>
 xnoremap in :<c-u>call <SID>NextTextObject('i', 'f')<cr>
- 
+
 onoremap al :<c-u>call <SID>NextTextObject('a', 'F')<cr>
 xnoremap al :<c-u>call <SID>NextTextObject('a', 'F')<cr>
 onoremap il :<c-u>call <SID>NextTextObject('i', 'F')<cr>
@@ -198,19 +210,19 @@ function! <SID>CleanFile()
     let @/=_s
     call cursor(l, c)
 endfunction
- 
+
 function! s:NextTextObject(motion, dir)
-  let c = nr2char(getchar())
- 
-  if c ==# "b"
-      let c = "("
-  elseif c ==# "B"
-      let c = "{"
-  elseif c ==# "r"
-      let c = "["
-  endif
- 
-  exe "normal! ".a:dir.c."v".a:motion.c
+    let c = nr2char(getchar())
+
+    if c ==# "b"
+        let c = "("
+    elseif c ==# "B"
+        let c = "{"
+    elseif c ==# "r"
+        let c = "["
+    endif
+
+    exe "normal! ".a:dir.c."v".a:motion.c
 endfunction
 " }}}
 
